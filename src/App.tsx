@@ -46,8 +46,159 @@ import { getCachedAudioUrl, saveAudioToCache } from "./utils/audioCache";
 import OfflineManager from "./components/OfflineManager";
 import InteractiveFlashcards from "./components/InteractiveFlashcards";
 import WordSearchGame from "./components/WordSearchGame";
-import { getLessonImageUrl } from "./utils/lessonImages";
+import LessonIllustration from "./components/LessonIllustration";
+import { getLessonImageUrl, getLessonCartoonDesc } from "./utils/lessonImages";
 import APKInstallPrompt from "./components/APKInstallPrompt";
+
+interface SudaneseCharacter {
+  avatar: string;
+  bgClass: string;
+  textColor: string;
+}
+
+function getSudaneseCharacter(speaker: string): SudaneseCharacter {
+  const norm = speaker.trim().toLowerCase();
+  
+  if (norm.includes("einas")) {
+    return {
+      avatar: "👩🏾‍🎓",
+      bgClass: "from-sky-100 to-indigo-100 border-indigo-300 text-indigo-900",
+      textColor: "text-indigo-950"
+    };
+  }
+  if (norm.includes("zeinab")) {
+    return {
+      avatar: "👩🏾‍🦱",
+      bgClass: "from-rose-100 to-pink-100 border-rose-300 text-rose-900",
+      textColor: "text-rose-950"
+    };
+  }
+  if (norm.includes("khalifa")) {
+    return {
+      avatar: "👳🏾‍♂️",
+      bgClass: "from-amber-100 to-yellow-100 border-amber-300 text-amber-900",
+      textColor: "text-amber-950"
+    };
+  }
+  if (norm.includes("osman")) {
+    return {
+      avatar: "🧔🏾‍♂️",
+      bgClass: "from-teal-100 to-emerald-100 border-teal-300 text-teal-900",
+      textColor: "text-teal-950"
+    };
+  }
+  if (norm.includes("architect") || norm.includes("معماري")) {
+    return {
+      avatar: "👷🏾‍♂️",
+      bgClass: "from-blue-100 to-sky-100 border-blue-300 text-blue-900",
+      textColor: "text-blue-950"
+    };
+  }
+  if (norm.includes("engineer") || norm.includes("مهندس")) {
+    return {
+      avatar: "👨🏾‍💻",
+      bgClass: "from-purple-100 to-violet-100 border-purple-300 text-purple-950",
+      textColor: "text-purple-950"
+    };
+  }
+  if (norm.includes("worker") || norm.includes("عامل")) {
+    return {
+      avatar: "👨🏾‍🔧",
+      bgClass: "from-orange-100 to-amber-100 border-orange-300 text-orange-950",
+      textColor: "text-orange-950"
+    };
+  }
+  if (norm.includes("ali")) {
+    return {
+      avatar: "👦🏾",
+      bgClass: "from-sky-100 to-teal-100 border-sky-300 text-sky-900",
+      textColor: "text-sky-950"
+    };
+  }
+  if (norm.includes("tariq")) {
+    return {
+      avatar: "👦🏾",
+      bgClass: "from-indigo-100 to-blue-100 border-indigo-300 text-indigo-900",
+      textColor: "text-indigo-950"
+    };
+  }
+  if (norm.includes("yasir")) {
+    return {
+      avatar: "🧔🏾‍♂️",
+      bgClass: "from-emerald-100 to-teal-100 border-emerald-300 text-emerald-900",
+      textColor: "text-emerald-950"
+    };
+  }
+  if (norm.includes("matthew")) {
+    return {
+      avatar: "🧔🏼",
+      bgClass: "from-slate-100 to-slate-200 border-slate-300 text-slate-800",
+      textColor: "text-slate-900"
+    };
+  }
+  if (norm.includes("hind") || norm.includes("teacher") || norm.includes("أستاذة") || norm.includes("mrs")) {
+    return {
+      avatar: "👩🏾‍🏫",
+      bgClass: "from-fuchsia-100 to-purple-100 border-fuchsia-300 text-fuchsia-900",
+      textColor: "text-fuchsia-950"
+    };
+  }
+  if (norm.includes("lion")) {
+    return {
+      avatar: "🦁",
+      bgClass: "from-amber-100 to-orange-100 border-amber-300 text-amber-900",
+      textColor: "text-amber-950"
+    };
+  }
+  if (norm.includes("hyena")) {
+    return {
+      avatar: "🐺",
+      bgClass: "from-slate-200 to-slate-300 border-slate-400 text-slate-700",
+      textColor: "text-slate-800"
+    };
+  }
+  if (norm.includes("fox")) {
+    return {
+      avatar: "🦊",
+      bgClass: "from-orange-100 to-yellow-100 border-orange-300 text-orange-900",
+      textColor: "text-orange-950"
+    };
+  }
+  if (norm.includes("robinson")) {
+    return {
+      avatar: "🧔",
+      bgClass: "from-cyan-100 to-sky-100 border-cyan-300 text-cyan-900",
+      textColor: "text-cyan-950"
+    };
+  }
+  if (norm.includes("ahmed")) {
+    return {
+      avatar: "👦🏾",
+      bgClass: "from-indigo-100 to-cyan-100 border-indigo-300 text-indigo-900",
+      textColor: "text-indigo-950"
+    };
+  }
+  if (norm.includes("bdr") || norm.includes("badr")) {
+    return {
+      avatar: "👶🏾",
+      bgClass: "from-amber-100 to-orange-100 border-amber-200 text-amber-900",
+      textColor: "text-amber-950"
+    };
+  }
+  if (norm.includes("cathy")) {
+    return {
+      avatar: "👧🏼",
+      bgClass: "from-pink-100 to-rose-100 border-pink-200 text-pink-900",
+      textColor: "text-pink-950"
+    };
+  }
+
+  return {
+    avatar: "👩🏾",
+    bgClass: "from-slate-50 to-slate-100 border-slate-300 text-slate-700",
+    textColor: "text-slate-800"
+  };
+}
 
 export default function App() {
   const [selectedUnit, setSelectedUnit] = useState<UnitItem>(SMILE_UNITS[0]);
@@ -405,6 +556,9 @@ export default function App() {
   // Voice selection mode (Vibrant server-side AI Voice with zero-config HTML5 audio fallbacks)
   const [voiceMode, setVoiceMode] = useState<"system" | "gemini">("gemini");
 
+  // Reading speed (0.5 to 2.0, default 0.85 as requested / moderately slow for children)
+  const [readingSpeed, setReadingSpeed] = useState<number>(0.85);
+
   // Fullscreen state and handlers
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -650,7 +804,8 @@ export default function App() {
       setActiveSpeakingLineIndex(i);
       
       speakText(line.text, line.voice);
-      const approxDuration = Math.max(2500, line.text.split(" ").length * 450 + 1200);
+      const speedFactor = 0.85 / readingSpeed;
+      const approxDuration = Math.max(2500 * speedFactor, (line.text.split(" ").length * 450 + 1200) * speedFactor);
       await new Promise(resolve => setTimeout(resolve, approxDuration));
     }
     
@@ -747,6 +902,14 @@ export default function App() {
       }
       
       audioPlayerRef.current.load(); // Prepare media decoder
+      
+      // Set the playback rate according to selected reading speed
+      audioPlayerRef.current.playbackRate = readingSpeed;
+      audioPlayerRef.current.onplay = () => {
+        if (audioPlayerRef.current) {
+          audioPlayerRef.current.playbackRate = readingSpeed;
+        }
+      };
 
       audioPlayerRef.current.onended = () => {
         setAudioPlaybackActive(false);
@@ -826,7 +989,7 @@ export default function App() {
     }
 
     utterance.lang = "en-US";
-    utterance.rate = 0.85; // Speak moderately slow for children
+    utterance.rate = readingSpeed; // Speak according to selected reading speed
     
     utterance.onboundary = (event) => {
       if (event.name === "word") {
@@ -1133,6 +1296,57 @@ export default function App() {
                     </button>
                   </div>
 
+                  {/* Reading Speed Controller */}
+                  <div className="bg-slate-50 p-4 rounded-[20px] border border-slate-100 flex flex-col gap-2.5 mt-1">
+                    <div className="flex justify-between items-center text-slate-800">
+                      <span className="text-[11px] font-black uppercase tracking-wider flex items-center gap-1 text-indigo-950">
+                        ⏱️ Reading Speed / سرعة القراءة
+                      </span>
+                      <span className="text-xs font-black px-2 py-0.5 bg-indigo-100 text-indigo-700 rounded-lg">
+                        {readingSpeed}x
+                      </span>
+                    </div>
+
+                    {/* Preset Segmented Buttons */}
+                    <div className="grid grid-cols-5 gap-1 bg-white p-1 rounded-xl border border-slate-100">
+                      {[
+                        { label: "بطيء", value: 0.6 },
+                        { label: "هادئ", value: 0.75 },
+                        { label: "عادي", value: 0.85 },
+                        { label: "طبيعي", value: 1.0 },
+                        { label: "سريع", value: 1.2 }
+                      ].map((preset) => (
+                        <button
+                          key={preset.value}
+                          onClick={() => setReadingSpeed(preset.value)}
+                          className={`py-1.5 px-0.5 rounded-lg text-[10px] font-black transition-all cursor-pointer text-center leading-none ${
+                            readingSpeed === preset.value
+                              ? "bg-indigo-600 text-white shadow-xs"
+                              : "text-slate-600 hover:bg-slate-100"
+                          }`}
+                        >
+                          <span className="block mb-0.5">{preset.value}x</span>
+                          <span className="text-[8px] opacity-90">{preset.label}</span>
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Fine-Tuning Slider */}
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-[10px] font-bold text-slate-400">0.5x</span>
+                      <input
+                        type="range"
+                        min="0.5"
+                        max="1.5"
+                        step="0.05"
+                        value={readingSpeed}
+                        onChange={(e) => setReadingSpeed(parseFloat(e.target.value))}
+                        className="flex-1 accent-indigo-600 h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <span className="text-[10px] font-bold text-slate-400">1.5x</span>
+                    </div>
+                  </div>
+
                   <button
                     onClick={() => speakText("Welcome to SMILE English, Grade 9 Intermediate student! As-salamu alaykum!", "Kore")}
                     className="mt-1 w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs uppercase py-3 px-4 rounded-[16px] border-b-4 border-emerald-700 transition-all flex items-center justify-center gap-2 cursor-pointer transform active:translate-y-0.5"
@@ -1319,31 +1533,49 @@ export default function App() {
                   </div>
 
                   <div className="bg-white p-6 sm:p-8 rounded-[40px] border-b-8 border-r-8 border-indigo-100 flex flex-col gap-4 relative overflow-hidden">
-                    <div className="flex items-center justify-between mb-2">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-2 pb-2 border-b border-slate-100">
                       <h4 className="text-lg font-black text-indigo-950 flex items-center gap-2 uppercase tracking-wide">
                         {selectedLesson.type === "song" && <Music className="w-5 h-5 text-indigo-500" />}
                         {selectedLesson.type === "conversation" && <Volume2 className="w-5 h-5 text-indigo-500" />}
                         {selectedLesson.type === "phonics" && <Sparkles className="w-5 h-5 text-indigo-500" />}
                         {selectedLesson.title}
                       </h4>
-                      <span className="text-xs bg-indigo-100 text-indigo-800 font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                        {selectedLesson.type}
-                      </span>
-                    </div>
+                      <div className="flex items-center gap-3 flex-wrap">
+                        {/* Compact Speed Selector */}
+                        <div className="bg-indigo-50/60 border border-indigo-100 p-1.5 rounded-[16px] flex items-center gap-2 shadow-xs">
+                          <span className="text-[10px] font-black text-indigo-950 uppercase tracking-widest pl-1 flex items-center gap-1">
+                            ⏱️ سرعة القراءة:
+                          </span>
+                          <div className="flex gap-1">
+                            {[
+                              { label: "بطيء", value: 0.6 },
+                              { label: "عادي", value: 0.85 },
+                              { label: "طبيعي", value: 1.0 },
+                              { label: "سريع", value: 1.2 }
+                            ].map((speedItem) => (
+                              <button
+                                key={speedItem.value}
+                                onClick={() => setReadingSpeed(speedItem.value)}
+                                className={`px-2 py-1 rounded-lg text-[10px] font-black transition-all cursor-pointer ${
+                                  readingSpeed === speedItem.value
+                                    ? "bg-indigo-600 text-white shadow-xs"
+                                    : "text-indigo-950 bg-white hover:bg-indigo-100/50 border border-indigo-100/40"
+                                }`}
+                              >
+                                {speedItem.label} ({speedItem.value}x)
+                              </button>
+                            ))}
+                          </div>
+                        </div>
 
-                    {/* Contextual Educational Lesson Illustration Card */}
-                    <div className="relative w-full h-48 sm:h-64 rounded-[28px] overflow-hidden border-4 border-indigo-50 shadow-sm group">
-                      <img
-                        src={getLessonImageUrl(selectedUnit.id, selectedLesson.id)}
-                        alt={selectedLesson.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        referrerPolicy="no-referrer"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-indigo-950/40 via-transparent to-transparent pointer-events-none" />
-                      <div className="absolute bottom-3 left-4 bg-indigo-950/65 backdrop-blur-xs text-white text-[11px] font-black px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5 shadow-sm border border-white/10 select-none">
-                        <span>📚 Unit {selectedUnit.id} • Lesson {selectedLesson.id} Context Visual</span>
+                        <span className="text-xs bg-indigo-100 text-indigo-800 font-black px-3 py-1.5 rounded-full uppercase tracking-wider">
+                          {selectedLesson.type}
+                        </span>
                       </div>
                     </div>
+
+                    {/* Contextual Educational Lesson Cartoon Illustration Card */}
+                    <LessonIllustration unitId={selectedUnit.id} lessonId={selectedLesson.id} title={selectedLesson.title} />
 
                     {/* Interactive Word Reader Guidance Banner */}
                     {(selectedLesson.type === "song" || selectedLesson.type === "vocab" || selectedLesson.type === "conversation") && (
@@ -1405,13 +1637,14 @@ export default function App() {
                         {selectedLesson.content.dialogue.map((line, key) => {
                           const isSpecial = line.speaker === "Mrs. Hind" || line.speaker === "Mrs Hind" || line.speaker === "Teacher" || line.speaker === "Policeman";
                           const isPlaying = speakingText === line.text && audioPlaybackActive;
+                          const sChar = getSudaneseCharacter(line.speaker);
                           return (
                             <div 
                               key={key} 
                               className={`flex items-start gap-3 w-full ${isSpecial ? "flex-row-reverse" : ""}`}
                             >
-                              <div className={`p-3 rounded-[20px] text-3xl font-black shadow-sm select-none ${isSpecial ? "bg-amber-100 text-amber-700 border-2 border-amber-300" : "bg-sky-100 text-sky-700 border-2 border-sky-300"}`}>
-                                {line.speaker === "Ahmed" ? "👦" : line.speaker === "Badr" ? "👶" : line.speaker === "Cathy" ? "👧" : "👩"}
+                              <div className={`p-2.5 rounded-[22px] shadow-sm border-2 flex items-center justify-center select-none shrink-0 bg-gradient-to-br ${sChar.bgClass} w-16 h-16`}>
+                                <div className="text-3xl filter drop-shadow-sm">{sChar.avatar}</div>
                               </div>
                               <motion.div 
                                 onClick={() => speakText(line.text, line.voice)}
@@ -1428,7 +1661,9 @@ export default function App() {
                                 }`}
                               >
                                 <div className="flex justify-between items-center mb-1">
-                                  <span className="text-xs font-black text-slate-500 uppercase tracking-widest">{line.speaker}</span>
+                                  <span className="text-xs font-black text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+                                    <span>{line.speaker}</span>
+                                  </span>
                                   <div className="text-slate-400 p-1">
                                     {isPlaying ? (
                                       <VolumeX className="w-5 h-5 text-red-500 animate-pulse" />

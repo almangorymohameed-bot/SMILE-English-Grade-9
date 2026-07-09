@@ -48,6 +48,7 @@ import OfflineManager from "./components/OfflineManager";
 import InteractiveFlashcards from "./components/InteractiveFlashcards";
 import WordSearchGame from "./components/WordSearchGame";
 import DictationGame from "./components/DictationGame";
+import LessonGrammar from "./components/LessonGrammar";
 import LessonIllustration from "./components/LessonIllustration";
 import { getLessonImageUrl, getLessonCartoonDesc } from "./utils/lessonImages";
 import APKInstallPrompt from "./components/APKInstallPrompt";
@@ -1746,6 +1747,14 @@ export default function App() {
                         )}
                       </div>
                     )}
+
+                    {/* Dynamic Grammar rules extraction & interactive Quiz at the end of each lesson */}
+                    <LessonGrammar
+                      unit={selectedUnit}
+                      lesson={selectedLesson}
+                      speakText={speakText}
+                      addPoints={(amt) => setPoints((p) => p + amt)}
+                    />
                   </div>
 
                   {/* Vocabulary words card section for quick study */}

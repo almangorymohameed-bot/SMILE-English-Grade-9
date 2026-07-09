@@ -2683,7 +2683,7 @@ export default function App() {
                         border: none !important;
                         box-shadow: none !important;
                         margin: 0 !important;
-                        padding: 1.4cm 1.2cm 1.8cm 1.2cm !important; /* Fixed print padding with bottom margin space */
+                        padding: 0.9cm 1.0cm 0.9cm 1.0cm !important; /* Extremely precise margins to fit exactly on physical A4 pages */
                         width: 21cm !important;
                         height: 29.7cm !important;
                         max-width: 21cm !important;
@@ -2697,6 +2697,103 @@ export default function App() {
                         position: relative !important;
                         overflow: hidden !important;
                         display: block !important;
+                      }
+                      /* Strict high-fidelity print compacting overrides for A4 bounds */
+                      .print-container .border-b-4.border-double {
+                        padding-bottom: 6px !important;
+                        margin-bottom: 10px !important;
+                      }
+                      .print-container .border-b-4.border-double .mt-4 {
+                        margin-top: 4px !important;
+                      }
+                      .print-container .border-b-4.border-double h1 {
+                        font-size: 14px !important;
+                        line-height: 1.15 !important;
+                      }
+                      .print-container .border-b-4.border-double h2 {
+                        font-size: 11px !important;
+                        line-height: 1.15 !important;
+                      }
+                      .print-container .border-b-4.border-double .text-xs {
+                        font-size: 9px !important;
+                      }
+                      .print-container .grid-cols-1.md\:grid-cols-3 {
+                        margin-top: 8px !important;
+                        padding-top: 6px !important;
+                        gap: 8px !important;
+                      }
+                      .print-container h3 {
+                        font-size: 11px !important;
+                        padding-bottom: 2px !important;
+                        margin-bottom: 4px !important;
+                        border-bottom-width: 1.5px !important;
+                      }
+                      .print-container h3 + p {
+                        margin-bottom: 3px !important;
+                        font-size: 9.5px !important;
+                      }
+                      .print-container .bg-slate-50.p-4.rounded-xl {
+                        padding: 6px 10px !important;
+                        margin-bottom: 4px !important;
+                        font-size: 10px !important;
+                        line-height: 1.3 !important;
+                        border-radius: 8px !important;
+                      }
+                      .print-container .space-y-4 {
+                        gap: 2px !important;
+                      }
+                      .print-container .space-y-4 > div {
+                        margin-top: 3px !important;
+                      }
+                      .print-container .hidden.print\:flex {
+                        margin-top: 1px !important;
+                        gap: 12px !important;
+                      }
+                      .print-container .mt-2.ml-4.border-b {
+                        margin-top: 2px !important;
+                        height: 18px !important;
+                      }
+                      .print-container .mb-6 {
+                        margin-bottom: 4px !important;
+                      }
+                      .print-container .grid-cols-1.sm\:grid-cols-2 {
+                        gap: 4px !important;
+                      }
+                      .print-container .bg-slate-50\/40 {
+                        padding: 5px 8px !important;
+                        border-radius: 6px !important;
+                      }
+                      .print-container .flex.items-center.gap-3 {
+                        margin-top: 2px !important;
+                      }
+                      .print-container .min-h-\[40px\] {
+                        min-height: 26px !important;
+                      }
+                      .print-container .space-y-3 {
+                        margin-top: 2px !important;
+                      }
+                      .print-container .space-y-3 > div {
+                        margin-top: 2px !important;
+                      }
+                      .print-container .border-b.border-slate-300 {
+                        padding-bottom: 4px !important;
+                        margin-bottom: 8px !important;
+                      }
+                      .print-container .border-t.border-slate-300 {
+                        padding-top: 6px !important;
+                        margin-top: 8px !important;
+                      }
+                      .print-container .space-y-6 {
+                        margin-top: 4px !important;
+                      }
+                      .print-container .space-y-6 > div {
+                        margin-top: 3px !important;
+                      }
+                      .print-container .space-y-6 .mt-2 {
+                        margin-top: 1px !important;
+                      }
+                      .print-container .space-y-6 .mt-1 {
+                        margin-top: 1px !important;
                       }
                       .watermark {
                         position: absolute !important;

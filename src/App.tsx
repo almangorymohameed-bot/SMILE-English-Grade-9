@@ -2683,9 +2683,9 @@ export default function App() {
                         margin: 0 !important;
                         padding: 1.4cm 1.2cm 1.8cm 1.2cm !important; /* Fixed print padding with bottom margin space */
                         width: 21cm !important;
-                        height: 29.6cm !important;
+                        height: 29.7cm !important;
                         max-width: 21cm !important;
-                        max-height: 29.6cm !important;
+                        max-height: 29.7cm !important;
                         box-sizing: border-box !important;
                         background: white !important;
                         page-break-after: always !important;
@@ -2697,10 +2697,23 @@ export default function App() {
                         display: block !important;
                       }
                       .watermark {
-                        color: rgba(0, 0, 0, 0.07) !important;
+                        position: absolute !important;
+                        inset: 0 !important;
+                        pointer-events: none !important;
+                        user-select: none !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        transform: rotate(-25deg) !important;
+                        font-family: 'Inter', sans-serif !important;
+                        font-weight: 900 !important;
+                        font-size: 3.5rem !important;
+                        letter-spacing: 0.1em !important;
+                        text-align: center !important;
+                        z-index: 50 !important;
+                        color: rgba(0, 0, 0, 0.08) !important;
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
-                        display: flex !important;
                       }
                     }
                     @media screen {
@@ -2719,12 +2732,32 @@ export default function App() {
                         position: relative !important;
                         overflow: visible !important;
                       }
+                      .watermark {
+                        position: absolute !important;
+                        inset: 0 !important;
+                        pointer-events: none !important;
+                        user-select: none !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        transform: rotate(-25deg) !important;
+                        font-family: 'Inter', sans-serif !important;
+                        font-weight: 900 !important;
+                        font-size: 3.5rem !important;
+                        letter-spacing: 0.1em !important;
+                        text-align: center !important;
+                        z-index: 50 !important;
+                        color: rgba(15, 23, 42, 0.07) !important;
+                      }
                       @media screen and (max-width: 22cm) {
                         .print-container {
                           height: auto !important;
                           padding: 1.2rem 1rem !important;
                           border-radius: 16px !important;
                           overflow: visible !important;
+                        }
+                        .watermark {
+                          font-size: 2.2rem !important;
                         }
                       }
                       .page-break {
@@ -2960,10 +2993,7 @@ export default function App() {
 
                             {/* WATERMARK LAYER (CONDITIONAL) */}
                             {!watermarkRemoved && (
-                              <div 
-                                className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-200/50 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
-                                style={{ opacity: 0.15, zIndex: 0, direction: "rtl" }}
-                              >
+                              <div className="watermark" style={{ direction: "rtl" }}>
                                 نقلة للمناهج الالكترونية
                               </div>
                             )}
@@ -3275,10 +3305,7 @@ export default function App() {
 
                               {/* WATERMARK LAYER (CONDITIONAL) */}
                               {!watermarkRemoved && (
-                                <div 
-                                  className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-200/50 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
-                                  style={{ opacity: 0.15, zIndex: 0, direction: "rtl" }}
-                                >
+                                <div className="watermark" style={{ direction: "rtl" }}>
                                   نقلة للمناهج الالكترونية
                                 </div>
                               )}

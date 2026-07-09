@@ -200,7 +200,7 @@ export default function APKInstallPrompt({ isOpen, onClose }: APKInstallPromptPr
             initial={{ opacity: 0, y: 50, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
-            className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:w-[420px] bg-sky-900 text-white rounded-[28px] p-5 shadow-2xl border-4 border-white/90 flex flex-col gap-3"
+            className="no-print fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:w-[420px] bg-sky-900 text-white rounded-[28px] p-5 shadow-2xl border-4 border-white/90 flex flex-col gap-3"
           >
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-3">
@@ -240,7 +240,7 @@ export default function APKInstallPrompt({ isOpen, onClose }: APKInstallPromptPr
       {/* 2. High-Fidelity App Installer Modal Overlay */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
+          <div className="no-print fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm overflow-y-auto">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}

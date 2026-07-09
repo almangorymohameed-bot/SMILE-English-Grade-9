@@ -2647,31 +2647,33 @@ export default function App() {
                         color: black !important;
                         padding: 0 !important;
                         margin: 0 !important;
-                        width: 100% !important;
+                        width: 21cm !important;
                         height: auto !important;
+                        overflow: visible !important;
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
                       }
-                      header, footer, aside, .no-print, button, input, select, nav, [role="tablist"], iframe {
+                      header, footer, aside, .no-print, button, input, select, nav, [role="tablist"], iframe, .fixed, #smart-search-fab, #smart-search-chat-window, [id*="install"] {
                         display: none !important;
                       }
-                      /* Reset outer website container paddings/backgrounds/shadows under print */
-                      div.min-h-screen, main, div.grid, .printable-exams-wrapper {
-                        display: block !important;
-                        padding: 0 !important;
-                        margin: 0 !important;
-                        width: 100% !important;
-                        max-width: 100% !important;
-                        box-shadow: none !important;
-                        border: none !important;
-                        background: transparent !important;
-                      }
+                      /* Force the layout containers to span the full page without flex or grid gaps or horizontal shifts */
+                      #root > div, 
+                      #root > div > div, 
+                      #root > div > div > main, 
+                      #root > div > div > main > div,
+                      .printable-exams-wrapper,
                       .no-page-break-container {
+                        display: block !important;
                         padding: 0 !important;
                         margin: 0 !important;
+                        width: 21cm !important;
+                        max-width: 21cm !important;
+                        min-width: 21cm !important;
+                        height: auto !important;
                         border: none !important;
                         box-shadow: none !important;
-                        display: block !important;
+                        background: transparent !important;
+                        overflow: visible !important;
                       }
                       .no-page-break-container > * {
                         margin-top: 0 !important;
@@ -2705,13 +2707,14 @@ export default function App() {
                         align-items: center !important;
                         justify-content: center !important;
                         transform: rotate(-25deg) !important;
-                        font-family: 'Inter', sans-serif !important;
+                        font-family: 'Cairo', 'Tajawal', 'Inter', sans-serif !important;
                         font-weight: 900 !important;
                         font-size: 3.5rem !important;
                         letter-spacing: 0.1em !important;
                         text-align: center !important;
                         z-index: 50 !important;
-                        color: rgba(0, 0, 0, 0.08) !important;
+                        color: #e2e8f0 !important; /* Solid light gray to ensure high-fidelity printing without transparency drop */
+                        opacity: 0.85 !important;
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
                       }
@@ -2741,13 +2744,14 @@ export default function App() {
                         align-items: center !important;
                         justify-content: center !important;
                         transform: rotate(-25deg) !important;
-                        font-family: 'Inter', sans-serif !important;
+                        font-family: 'Cairo', 'Tajawal', 'Inter', sans-serif !important;
                         font-weight: 900 !important;
                         font-size: 3.5rem !important;
                         letter-spacing: 0.1em !important;
                         text-align: center !important;
                         z-index: 50 !important;
-                        color: rgba(15, 23, 42, 0.07) !important;
+                        color: #cbd5e1 !important; /* Elegant light slate color for preview screen */
+                        opacity: 0.45 !important;
                       }
                       @media screen and (max-width: 22cm) {
                         .print-container {
@@ -2951,7 +2955,7 @@ export default function App() {
 
                     </div>
 
-                    <div className="flex justify-between items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div className="no-print flex justify-between items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
                       <div className="flex items-center gap-2 text-[11px] font-bold text-slate-500">
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                         <span>جاهز للطباعة المباشرة من المتصفح باستخدام هيدر وزاري متكامل</span>

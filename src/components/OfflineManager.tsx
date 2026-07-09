@@ -103,6 +103,56 @@ export default function OfflineManager({ currentUnit, allUnits }: OfflineManager
     return Array.from(new Set(phrases));
   };
 
+  // Helper to prefetch Arabic translations for all phrases/words
+  const prefetchTranslations = async (phrasesList: string[]) => {
+    // 1. Get words (only words / short phrases, length < 25)
+    const wordsToFetch = phrasesList
+      .map(p => p.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, ""))
+      .filter(p => p.length > 1 && p.length < 25 && !/\s{2,}/.test(p));
+    
+    // De-duplicate
+    const uniqueWords = Array.from(new Set(wordsToFetch));
+    
+    // 2. Filter out words that are already cached
+    let cachedTranslations: Record<string, string> = {};
+    try {
+      const cached = localStorage.getItem("smile_translation_cache");
+      if (cached) cachedTranslations = JSON.parse(cached);
+    } catch (e) {}
+
+    const pendingWords = uniqueWords.filter(w => !cachedTranslations[w]);
+    if (pendingWords.length === 0) return;
+
+    // Fetch them in small batches to avoid rate limits
+    const batchSize = 5;
+    for (let i = 0; i < pendingWords.length; i += batchSize) {
+      const batch = pendingWords.slice(i, i + batchSize);
+      await Promise.all(
+        batch.map(async (word) => {
+          try {
+            const res = await fetch("/api/translate", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: word }),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.translation) {
+                cachedTranslations[word] = data.translation;
+              }
+            }
+          } catch (err) {
+            console.error(`Failed to prefetch translation for "${word}":`, err);
+          }
+        })
+      );
+      // Save progress to localStorage after each batch
+      try {
+        localStorage.setItem("smile_translation_cache", JSON.stringify(cachedTranslations));
+      } catch (e) {}
+    }
+  };
+
   // Triggers background pre-downloading and caching
   const handlePreDownload = async (type: "unit" | "syllabus") => {
     if (isDownloading) return;
@@ -123,6 +173,9 @@ export default function OfflineManager({ currentUnit, allUnits }: OfflineManager
         setDownloadProgress({ current, total });
       });
       setDownloadSuccessCount(result.success);
+
+      // Pre-download all Arabic translations for words
+      await prefetchTranslations(phrases);
     } catch (err) {
       console.error("Pre-download error:", err);
     } finally {
@@ -136,51 +189,51 @@ export default function OfflineManager({ currentUnit, allUnits }: OfflineManager
     : 0;
 
   return (
-    <div id="offline-manager-card" className="bg-slate-50 border border-slate-200/80 rounded-[22px] p-4.5 space-y-4 shadow-inner">
+    <div id="offline-manager-card" className="bg-slate-50 border border-slate-200/80 rounded-[22px] p-4.5 space-y-4 shadow-inner" dir="rtl">
       {/* 1. Header & Connection Indicator */}
       <div className="flex items-center justify-between border-b border-slate-200 pb-2.5">
         <div className="flex items-center gap-1.5">
           <Database className="w-4 h-4 text-indigo-600 animate-pulse" />
           <h4 className="text-[13px] font-black text-slate-800 uppercase tracking-wide">
-            SMILE Offline Assistant
+            مساعد التشغيل بدون اتصال (Offline)
           </h4>
         </div>
 
         {isOnline ? (
           <span className="flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-black px-2.5 py-1 rounded-full border border-emerald-200 uppercase">
             <Wifi className="w-3.5 h-3.5 text-emerald-500 animate-pulse" />
-            Online
+            متصل
           </span>
         ) : (
           <span className="flex items-center gap-1 bg-amber-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full border border-amber-600 uppercase animate-pulse">
             <WifiOff className="w-3.5 h-3.5 text-white" />
-            Offline Mode
+            أوفلاين
           </span>
         )}
       </div>
 
       {/* 2. Cache status and sizes */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-white p-3 rounded-2xl border border-slate-100 text-center shadow-sm">
-          <p className="text-[10px] font-bold text-slate-400 uppercase">Cached Lessons</p>
+      <div className="grid grid-cols-2 gap-3 text-center">
+        <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+          <p className="text-[10px] font-bold text-slate-400 uppercase">الأصوات والدروس</p>
           <p className="text-xl font-black text-indigo-950 mt-0.5">{stats.count}</p>
-          <p className="text-[9px] text-indigo-500 font-bold">voice files saved</p>
+          <p className="text-[9px] text-indigo-500 font-bold">ملف صوتي محفوظ</p>
         </div>
 
-        <div className="bg-white p-3 rounded-2xl border border-slate-100 text-center shadow-sm">
-          <p className="text-[10px] font-bold text-slate-400 uppercase">Local Storage</p>
-          <p className="text-xl font-black text-indigo-950 mt-0.5">{stats.sizeMb} <span className="text-xs">MB</span></p>
-          <p className="text-[9px] text-slate-500 font-bold">used on device</p>
+        <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
+          <p className="text-[10px] font-bold text-slate-400 uppercase">المساحة المستهلكة</p>
+          <p className="text-xl font-black text-indigo-950 mt-0.5">{stats.sizeMb} <span className="text-xs">م.ب</span></p>
+          <p className="text-[9px] text-slate-500 font-bold">على ذاكرة الهاتف</p>
         </div>
       </div>
 
       {/* 3. Progress Bar for Pre-downloading */}
       {isDownloading && (
-        <div className="bg-white p-3.5 rounded-2xl border border-indigo-100 space-y-2 shadow-sm animate-pulse">
+        <div className="bg-white p-3.5 rounded-2xl border border-indigo-100 space-y-2 shadow-sm animate-pulse" dir="rtl">
           <div className="flex justify-between items-center text-[11px] font-black">
-            <span className="text-indigo-950 flex items-center gap-1">
+            <span className="text-indigo-950 flex items-center gap-1.5">
               <RefreshCw className="w-3 h-3 text-indigo-600 animate-spin" />
-              Caching offline audios...
+              جاري تنزيل وحفظ المنهج صوتياً وتراجم...
             </span>
             <span className="text-indigo-600 font-mono text-xs">{percentComplete}%</span>
           </div>
@@ -192,8 +245,8 @@ export default function OfflineManager({ currentUnit, allUnits }: OfflineManager
             />
           </div>
           
-          <div className="text-[9px] font-extrabold text-slate-400 text-right leading-tight">
-            Saved {downloadProgress.current} of {downloadProgress.total} phrases
+          <div className="text-[9px] font-extrabold text-slate-400 text-left leading-tight">
+            تم حفظ {downloadProgress.current} من {downloadProgress.total} جملة وكلمة تفاعلية
           </div>
         </div>
       )}
@@ -207,7 +260,7 @@ export default function OfflineManager({ currentUnit, allUnits }: OfflineManager
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-[11px] py-2.5 px-3 rounded-xl border-b-4 border-indigo-800 transition-all flex items-center justify-center gap-2 cursor-pointer hover:shadow"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Pre-download Unit {currentUnit.id} Sounds</span>
+              <span>تنزيل وحفظ أصوات وترجمات الوحدة {currentUnit.id} 📥</span>
             </button>
 
             <button
@@ -215,27 +268,27 @@ export default function OfflineManager({ currentUnit, allUnits }: OfflineManager
               className="w-full bg-slate-100 hover:bg-indigo-50 hover:text-indigo-800 text-slate-700 border border-slate-300 border-b-4 hover:border-indigo-300 font-bold text-[10px] py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
-              <span>Pre-download Whole Grade 9 Syllabus</span>
+              <span>تنزيل وحفظ أصوات وترجمات كامل المنهج السوداني 🇸🇩</span>
             </button>
           </>
         ) : null}
 
         {/* Caching feedback alerts */}
         {downloadSuccessCount > 0 && !isDownloading && (
-          <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 p-2.5 rounded-xl text-[10px] font-extrabold flex items-center gap-1.5 animate-fadeIn">
+          <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 p-2.5 rounded-xl text-[10px] font-extrabold flex items-center gap-1.5 animate-fadeIn" dir="rtl">
             <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
             <div>
-              <span>Successfully cached <strong>{downloadSuccessCount}</strong> phrases for Unit {currentUnit.id} offline!</span>
+              <span>تم بنجاح حفظ وتثبيت <strong>{downloadSuccessCount}</strong> جملة وكلمة للوحدة {currentUnit.id} للعمل أوفلاين بشكل كامل!</span>
             </div>
           </div>
         )}
 
         {/* Quick Offline Note */}
         {!isOnline && (
-          <div className="bg-amber-50 text-amber-900 border border-amber-200 p-2.5 rounded-xl text-[10px] leading-relaxed font-bold flex items-start gap-1.5 animate-fadeIn">
+          <div className="bg-amber-50 text-amber-900 border border-amber-200 p-2.5 rounded-xl text-[10px] leading-relaxed font-bold flex items-start gap-1.5 animate-fadeIn" dir="rtl">
             <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
             <div>
-              <span>No Internet Connection! E-learning pages, interactive matching games, dictionary definitions, and pre-downloaded audios will continue to function 100% offline.</span>
+              <span>أنت تتصفح أوفلاين حالياً! جميع الصفحات التفاعلية، ألعاب الكلمات والبحث، الدروس، وتراجم الكلمات، والأصوات المحفوظة مسبقاً ستعمل معك 100% بدون شبكة.</span>
             </div>
           </div>
         )}
@@ -247,7 +300,7 @@ export default function OfflineManager({ currentUnit, allUnits }: OfflineManager
             className="w-full text-center text-[10px] font-bold text-rose-500/80 hover:text-rose-600 hover:underline flex items-center justify-center gap-1.5 pt-1.5 cursor-pointer border-t border-slate-200 mt-1"
           >
             <Trash2 className="w-3 h-3" />
-            Clear Voice Cache to Free Space
+            مسح ذاكرة التخزين المؤقت لتوفير مساحة الهاتف
           </button>
         )}
       </div>

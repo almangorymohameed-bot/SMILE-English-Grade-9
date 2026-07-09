@@ -2664,7 +2664,7 @@ export default function App() {
                         border: none !important;
                         box-shadow: none !important;
                         margin: 0 !important;
-                        padding: 1.2cm 1cm !important;
+                        padding: 1.5cm 1.2cm !important;
                         width: 21cm !important;
                         height: 29.7cm !important;
                         max-width: 21cm !important;
@@ -2694,6 +2694,14 @@ export default function App() {
                         border-radius: 24px !important;
                         position: relative !important;
                         overflow: hidden !important;
+                      }
+                      @media (max-width: 22cm) {
+                        .print-container {
+                          height: auto !important;
+                          padding: 1.2rem 1rem !important;
+                          border-radius: 16px !important;
+                          overflow: visible !important;
+                        }
                       }
                       .page-break {
                         margin-bottom: 2rem;
@@ -2914,28 +2922,10 @@ export default function App() {
                         .sort((a, b) => a.definitionOrSentence.length - b.definitionOrSentence.length);
 
                       return (
-                        <div 
-                          key={examPaper.id}
-                          className="print-container text-slate-800 text-left page-break"
-                          style={{ direction: "ltr" }}
-                        >
-                          {/* Page indicator for preview screen */}
-                          <div className="absolute top-4 right-4 bg-indigo-50 text-indigo-700 text-xs px-3 py-1 rounded-full font-black no-print">
-                            Sheet {paperIdx + 1} of {examPapers.length}
-                          </div>
-
-                          {/* WATERMARK LAYER (CONDITIONAL) */}
-                          {!watermarkRemoved && (
-                            <div 
-                              className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-100 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
-                              style={{ opacity: 0.1, zIndex: 0 }}
-                            >
-                              SMILE English Grade 9 Companion • Teacher Copy • Watermark Active • Password 20302060
-                            </div>
-                          )}
-
+                        <div key={examPaper.id} className="space-y-6 pb-12 border-b-2 border-slate-200 last:border-0 no-page-break-container">
+                          
                           {/* Interactive Grading Panel */}
-                          <div className="bg-slate-50 border border-slate-200 p-4 mb-6 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4 no-print text-right" style={{ direction: "rtl" }}>
+                          <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4 no-print text-right" style={{ direction: "rtl" }}>
                             <div className="w-full sm:w-auto">
                               <h4 className="text-sm font-black text-slate-800 flex items-center gap-2 justify-end">
                                 <span className="text-indigo-600 font-bold">تفاعلية حل وتصحيح ورقة العمل</span>
@@ -2983,6 +2973,26 @@ export default function App() {
                               )}
                             </div>
                           </div>
+
+                          {/* ================= PAGE 1 ================= */}
+                          <div 
+                            className="print-container text-slate-800 text-left page-break relative"
+                            style={{ direction: "ltr" }}
+                          >
+                            {/* Page indicator for preview screen */}
+                            <div className="absolute top-4 right-4 bg-indigo-50/80 backdrop-blur-sm text-indigo-700 text-[10px] px-2.5 py-1 rounded-full font-black no-print">
+                              Paper {paperIdx + 1} • Page 1
+                            </div>
+
+                            {/* WATERMARK LAYER (CONDITIONAL) */}
+                            {!watermarkRemoved && (
+                              <div 
+                                className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-100 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
+                                style={{ opacity: 0.1, zIndex: 0 }}
+                              >
+                                SMILE English Grade 9 Companion • Teacher Copy • Watermark Active • Password 20302060
+                              </div>
+                            )}
 
                           {/* Official Sudan School Header */}
                           <div className="border-b-4 border-double border-slate-800 pb-5 mb-6 text-center relative z-10" style={{ fontFamily: "Inter, sans-serif" }}>
@@ -3276,8 +3286,54 @@ export default function App() {
                               </div>
                             </div>
 
-                            {/* QUESTION 3: GRAMMAR & LANGUAGE STRUCTURES */}
-                            <div>
+                          </div>
+                        </div>
+
+                            {/* ================= PAGE 2 ================= */}
+                            <div 
+                              className="print-container text-slate-800 text-left page-break relative"
+                              style={{ direction: "ltr" }}
+                            >
+                              {/* Page indicator for preview screen */}
+                              <div className="absolute top-4 right-4 bg-indigo-50/80 backdrop-blur-sm text-indigo-700 text-[10px] px-2.5 py-1 rounded-full font-black no-print">
+                                Paper {paperIdx + 1} • Page 2
+                              </div>
+
+                              {/* WATERMARK LAYER (CONDITIONAL) */}
+                              {!watermarkRemoved && (
+                                <div 
+                                  className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-100 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
+                                  style={{ opacity: 0.1, zIndex: 0 }}
+                                >
+                                  SMILE English Grade 9 Companion • Teacher Copy • Watermark Active • Password 20302060
+                                </div>
+                              )}
+
+                              {/* Simple Page 2 Header */}
+                              <div className="border-b border-slate-300 pb-3 mb-5 text-center relative z-10" style={{ fontFamily: "Inter, sans-serif" }}>
+                                <div className="flex justify-between items-center text-[9px] font-bold text-slate-500 uppercase">
+                                  <span>National Certificate Exam - Grade 9</span>
+                                  <span className="font-extrabold text-indigo-900">ENGLISH LANGUAGE (PAGE 2)</span>
+                                  <span>Republic of Sudan</span>
+                                </div>
+                                {/* Page 2 metadata identifier */}
+                                <div className="flex justify-between items-center mt-2 pt-2 border-t border-slate-100 text-[10px] font-bold text-slate-500">
+                                  <div className="flex gap-1.5 w-1/2">
+                                    <span>Pupil's Name:</span>
+                                    <span className="flex-1 border-b border-dashed border-slate-300"></span>
+                                  </div>
+                                  <div className="flex gap-1.5 w-1/3">
+                                    <span>Index No:</span>
+                                    <span className="flex-1 border-b border-dashed border-slate-300"></span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* EXAM QUESTIONS SPACE - PART 2 */}
+                              <div className="relative z-10 space-y-6" style={{ fontFamily: "Inter, sans-serif" }}>
+
+                              {/* QUESTION 3: GRAMMAR & LANGUAGE STRUCTURES */}
+                              <div>
                               <h3 className="text-sm font-black uppercase text-slate-900 border-b-2 border-slate-800 pb-1 mb-3 flex justify-between">
                                 <span>Question 3: Grammar & Language Structures</span>
                                 <span className="font-bold text-xs lowercase text-slate-500">(8 Marks)</span>
@@ -3431,6 +3487,7 @@ export default function App() {
                             </div>
 
                           </div>
+                        </div>
                         </div>
                       );
                     })}

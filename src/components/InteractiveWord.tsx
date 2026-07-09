@@ -895,8 +895,25 @@ export const getArabicTranslation = (cleanWord: string): string | null => {
   return null;
 };
 
-// Shared dynamic translation cache across all InteractiveWord instances
-const dynamicTranslationCache: Record<string, string> = {};
+// Shared dynamic translation cache helper functions
+const getPersistentTranslationCache = (): Record<string, string> => {
+  try {
+    const cached = localStorage.getItem("smile_translation_cache");
+    return cached ? JSON.parse(cached) : {};
+  } catch (e) {
+    return {};
+  }
+};
+
+const savePersistentTranslation = (word: string, translation: string) => {
+  try {
+    const cache = getPersistentTranslationCache();
+    cache[word.toLowerCase().trim()] = translation;
+    localStorage.setItem("smile_translation_cache", JSON.stringify(cache));
+  } catch (e) {
+    console.error("Failed to save persistent translation:", e);
+  }
+};
 
 export default function InteractiveWord({
   word,
@@ -911,9 +928,14 @@ export default function InteractiveWord({
 
   const normalized = cleanWord.trim().toLowerCase();
   const localTranslation = getArabicTranslation(cleanWord);
-  const [translation, setTranslation] = useState<string | null>(
-    localTranslation || dynamicTranslationCache[normalized] || null
-  );
+  
+  const getInitialTranslation = () => {
+    if (localTranslation) return localTranslation;
+    const persistentCache = getPersistentTranslationCache();
+    return persistentCache[normalized] || null;
+  };
+
+  const [translation, setTranslation] = useState<string | null>(getInitialTranslation());
   const [isLoading, setIsLoading] = useState(false);
 
   // Check if touch device is active
@@ -933,7 +955,12 @@ export default function InteractiveWord({
   // Sync translation when cleanWord changes
   useEffect(() => {
     const local = getArabicTranslation(cleanWord);
-    setTranslation(local || dynamicTranslationCache[normalized] || null);
+    if (local) {
+      setTranslation(local);
+    } else {
+      const cache = getPersistentTranslationCache();
+      setTranslation(cache[normalized] || null);
+    }
   }, [cleanWord, normalized]);
 
   // Fetch translation if not available locally when tooltip is shown
@@ -953,7 +980,7 @@ export default function InteractiveWord({
         })
         .then((data) => {
           if (data.translation) {
-            dynamicTranslationCache[normalized] = data.translation;
+            savePersistentTranslation(normalized, data.translation);
             setTranslation(data.translation);
           }
         })

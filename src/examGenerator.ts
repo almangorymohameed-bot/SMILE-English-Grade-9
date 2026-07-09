@@ -68,6 +68,28 @@ const PASSAGES: ExamPassage[] = [
     ]
   },
   {
+    title: "The Great Nile River",
+    text: "The River Nile is the longest river in the world, stretching over 6,650 kilometers through eleven countries including Sudan. In Khartoum, the Blue Nile and the White Nile merge to form the main Nile River. The fertile soils along the riverbanks have allowed Sudanese farmers to grow crops like wheat, cotton, and vegetables for thousands of years. Today, the river is also a vital source of electricity and fresh drinking water.",
+    unitId: 3,
+    questions: [
+      { question: "How long is the River Nile?", answer: "Over 6,650 kilometers." },
+      { question: "Which two rivers merge in Khartoum to form the main Nile?", answer: "The Blue Nile and the White Nile." },
+      { question: "The Nile is the shortest river in the world.", answer: "", isTrueFalse: true, correctTF: "False" },
+      { question: "The Nile is a vital source of electricity and fresh drinking water in Sudan.", answer: "", isTrueFalse: true, correctTF: "True" }
+    ]
+  },
+  {
+    title: "The Story of Ibn Battuta",
+    text: "Ibn Battuta was a famous Islamic explorer who lived in the fourteenth century. He spent nearly thirty years traveling across Africa, the Middle East, India, and China. In total, he covered over 117,000 kilometers, which is more than any other explorer before the modern era. He wrote a famous book called the Rihla, describing the different cultures, kings, and traditional hospitality he experienced during his long journeys.",
+    unitId: 3,
+    questions: [
+      { question: "Who was Ibn Battuta?", answer: "A famous Islamic explorer." },
+      { question: "What is the title of the book Ibn Battuta wrote describing his travels?", answer: "The Rihla." },
+      { question: "Ibn Battuta traveled for almost thirty years.", answer: "", isTrueFalse: true, correctTF: "True" },
+      { question: "Ibn Battuta only visited European countries during his travels.", answer: "", isTrueFalse: true, correctTF: "False" }
+    ]
+  },
+  {
     title: "Omdurman Traditional Market",
     text: "Omdurman Market is the largest and most famous market in Sudan. It is almost two hundred years old and is known as the 'beating heart' of the city. Visitors from all over the world can find beautiful traditional handicrafts made of ebony wood, shiny silver, pure gold, and fine leather. Before the Eid holidays, the market becomes a busy, exciting maze full of customers buying clothes and fabrics.",
     unitId: 6,
@@ -95,40 +117,101 @@ const SPELLING_POOL: SpellingQuestion[] = [
   { word: "CHEMISTRY", clue: "The science of substances and liquid reactions", gapped: "c h _ m _ s t r y", unitId: 1 },
   { word: "BIOLOGY", clue: "The scientific study of plants and living things", gapped: "b _ o l o _ y", unitId: 1 },
   { word: "PHYSICS", clue: "The study of forces, gravity, and electricity", gapped: "p h _ s _ c s", unitId: 1 },
+  { word: "EXPERIMENT", clue: "A scientific test done in a laboratory", gapped: "e x p _ r _ m _ n t", unitId: 1 },
+  { word: "GRAVITY", clue: "The invisible force that pulls things to Earth", gapped: "g r _ v _ t y", unitId: 1 },
   { word: "JALLABIYA", clue: "A traditional loose white dress worn by Arab men", gapped: "j a l _ a b _ y a", unitId: 2 },
   { word: "CALLIGRAPHY", clue: "The art of beautiful writing used in mosques", gapped: "c a l _ i g r _ p h y", unitId: 2 },
+  { word: "TRADITIONAL", clue: "Passed down through generations like local customs", gapped: "t r _ d _ t _ o n a l", unitId: 2 },
   { word: "HOSPITALITY", clue: "Welcoming guests and sharing food generously", gapped: "h o s p _ t a l _ t y", unitId: 3 },
   { word: "EXPLORER", clue: "A person who travels to discover new places like Ibn Battuta", gapped: "e x p _ o r _ r", unitId: 3 },
+  { word: "VOYAGE", clue: "A long journey by sea or in space", gapped: "v o _ a g e", unitId: 3 },
   { word: "APPRENTICE", clue: "A student learning a practical job in a kitchen or garage", gapped: "a p p _ e n t _ c e", unitId: 4 },
   { word: "SORGHUM", clue: "The main grain used to bake traditional Sudanese bread", gapped: "s o r _ h _ m", unitId: 5 },
   { word: "DISCOUNT", clue: "A reduction in price at a clothing store", gapped: "d _ s c o _ n t", unitId: 6 },
+  { word: "HANDICRAFTS", clue: "Beautiful objects made by hand with skills", gapped: "h a n d _ c r _ f t s", unitId: 6 },
   { word: "UNIVERSITY", clue: "The place of high learning like University of Khartoum", gapped: "u n _ v e r s _ t y", unitId: 7 },
-  { word: "PENICILLIN", clue: "A life-saving medicine discovered by Alexander Fleming", gapped: "p e n _ c i l _ i n", unitId: 8 }
+  { word: "PENICILLIN", clue: "A life-saving medicine discovered by Alexander Fleming", gapped: "p e n _ c i l _ i n", unitId: 8 },
+  { word: "MEDICINE", clue: "A substance used to treat disease or relieve pain", gapped: "m _ d _ c _ n e", unitId: 8 }
 ];
 
 const GRAMMAR_POOL: GrammarQuestion[] = [
   { question: "If you heat ice, it ________.", options: ["melts", "melted", "melting"], correct: "melts", unitId: 1 },
   { question: "If your body ________ enough calcium, your bones will be weaker.", options: ["doesn't have", "don't have", "won't have"], correct: "doesn't have", unitId: 1 },
+  { question: "We must ________ water to stay healthy during summer.", options: ["drink", "drinking", "drank"], correct: "drink", unitId: 1 },
   { question: "Alexander Graham Bell was interested in sound ________ his mother was deaf.", options: ["because", "although", "but"], correct: "because", unitId: 1 },
   { question: "While Robinson ________ on the island, he built a strong house.", options: ["was staying", "stays", "stayed"], correct: "was staying", unitId: 2 },
   { question: "Leila Aboulela is the novelist ________ won the Caine Prize.", options: ["who", "which", "whose"], correct: "who", unitId: 2 },
+  { question: "This is the boy ________ book was lost yesterday.", options: ["whose", "who", "which"], correct: "whose", unitId: 2 },
+  { question: "While the teacher ________, the pupils were writing down notes.", options: ["was speaking", "speaks", "spoken"], correct: "was speaking", unitId: 2 },
   { question: "Sudan is ________ country than Vatican City.", options: ["a larger", "the largest", "large"], correct: "a larger", unitId: 3 },
   { question: "Have you ever ________ on a big boat?", options: ["been", "went", "going"], correct: "been", unitId: 3 },
+  { question: "Sami has lived in Port Sudan ________ he was a young boy.", options: ["since", "for", "during"], correct: "since", unitId: 4 },
   { question: "Huda has been a doctor ________ three years.", options: ["for", "since", "yet"], correct: "for", unitId: 4 },
   { question: "Captain Bakri has been a pilot ________ 1999.", options: ["since", "for", "already"], correct: "since", unitId: 4 },
+  { question: "They have already ________ their English homework.", options: ["done", "do", "doing"], correct: "done", unitId: 4 },
   { question: "We hope ________ a new tractor for our Gezira farm.", options: ["to get", "getting", "got"], correct: "to get", unitId: 5 },
   { question: "There are only a ________ sweets left in the glass jar.", options: ["few", "little", "much"], correct: "few", unitId: 5 },
-  { question: "Samira says her ambition ________ to expand her business.", options: ["is", "are", "was"], correct: "is", unitId: 6 }
+  { question: "There is a ________ sugar in my tea, but it is enough.", options: ["little", "few", "many"], correct: "little", unitId: 5 },
+  { question: "Samira says her ambition ________ to expand her business.", options: ["is", "are", "was"], correct: "is", unitId: 6 },
+  { question: "English is ________ subject for most grade 9 pupils.", options: ["the easiest", "easier", "easy"], correct: "the easiest", unitId: 7 },
+  { question: "Fatima intends ________ medicine at the university.", options: ["to study", "studying", "study"], correct: "to study", unitId: 7 }
 ];
 
 const WRITING_POOL: WritingQuestion[] = [
   { jumbled: "dissolves / Salt / you / when / water / in / put / it / .", ordered: "Salt dissolves when you put it in water.", unitId: 1 },
   { jumbled: "skeleton / bones / All / the / called / are / the / .", ordered: "All the bones are called the skeleton.", unitId: 1 },
   { jumbled: "fox / divided / The / food / the / fairly / .", ordered: "The fox divided the food fairly.", unitId: 2 },
-  { jumbled: "Bikila / barefoot / won / Rome / in / gold / .", ordered: "Bikila won gold barefoot in Rome.", unitId: 8 },
+  { jumbled: "Ibn / Battuta / was / a / great / Islamic / traveler / .", ordered: "Ibn Battuta was a great Islamic traveler.", unitId: 3 },
   { jumbled: "largest / market / is / Omdurman / Sudan / in / .", ordered: "Omdurman is largest market in Sudan.", unitId: 6 },
-  { jumbled: "Oldest / university / in / Fez / is / active / .", ordered: "Oldest active university is in Fez.", unitId: 7 }
+  { jumbled: "Oldest / university / in / Fez / is / active / .", ordered: "Oldest active university is in Fez.", unitId: 7 },
+  { jumbled: "The / brain / uses / twenty / percent / of / energy / .", ordered: "The brain uses twenty percent of energy.", unitId: 7 },
+  { jumbled: "We / should / eat / healthy / food / every / day / .", ordered: "We should eat healthy food every day.", unitId: 5 },
+  { jumbled: "Bikila / barefoot / won / Rome / in / gold / .", ordered: "Bikila won gold barefoot in Rome.", unitId: 8 },
+  { jumbled: "Penicillin / was / discovered / by / Alexander / Fleming / .", ordered: "Penicillin was discovered by Alexander Fleming.", unitId: 8 }
 ];
+
+/**
+ * Generic helper to select a list of unique items from a pool,
+ * ensuring no duplicate keys within the same selection,
+ * and preferring items that have not been globally used.
+ */
+function getUniqueSelection<T>(
+  pool: T[],
+  countNeeded: number,
+  getKey: (item: T) => string,
+  globalUsedKeys: Set<string>
+): T[] {
+  // Filter pool for items not used globally
+  let available = pool.filter(item => !globalUsedKeys.has(getKey(item)));
+  
+  // If we don't have enough globally unused items, fall back to the whole pool
+  // but we still MUST NOT introduce duplicate items inside this single selection!
+  if (available.length < countNeeded) {
+    available = [...pool];
+  }
+  
+  // Shuffle available items
+  const shuffled = [...available].sort(() => Math.random() - 0.5);
+  
+  const selection: T[] = [];
+  const selectionKeys = new Set<string>();
+  
+  for (const item of shuffled) {
+    const key = getKey(item);
+    if (!selectionKeys.has(key)) {
+      selectionKeys.add(key);
+      selection.push(item);
+      if (selection.length === countNeeded) {
+        break;
+      }
+    }
+  }
+  
+  // Add newly chosen items to the global tracking set
+  selection.forEach(item => globalUsedKeys.add(getKey(item)));
+  
+  return selection;
+}
 
 /**
  * Generates an array of non-overlapping A4 exam papers
@@ -153,24 +236,31 @@ export function generateSudanExams(
     if (scope === "unit" && targetUnitId !== undefined) {
       passagePool = passagePool.filter((p) => p.unitId === targetUnitId);
     }
-    let availablePassages = passagePool.filter((p) => !usedPassageTitles.has(p.title));
-    if (availablePassages.length === 0) {
-      availablePassages = passagePool.length > 0 ? passagePool : [...PASSAGES];
+    if (passagePool.length === 0) {
+      passagePool = [...PASSAGES];
     }
-    const passage = availablePassages[Math.floor(Math.random() * availablePassages.length)] || PASSAGES[0];
-    usedPassageTitles.add(passage.title);
+    const selectedPassages = getUniqueSelection(
+      passagePool,
+      1,
+      (p) => p.title,
+      usedPassageTitles
+    );
+    const passage = selectedPassages[0] || PASSAGES[0];
 
     // 2. FILTER SPELLING
     let spellingPool = [...SPELLING_POOL];
     if (scope === "unit" && targetUnitId !== undefined) {
       spellingPool = spellingPool.filter((s) => s.unitId === targetUnitId);
     }
-    let availableSpelling = spellingPool.filter((s) => !usedSpellingWords.has(s.word));
-    if (availableSpelling.length < 4) {
-      availableSpelling = spellingPool.length >= 4 ? spellingPool : [...SPELLING_POOL];
+    if (spellingPool.length === 0) {
+      spellingPool = [...SPELLING_POOL];
     }
-    const spellingShuffled = availableSpelling.sort(() => Math.random() - 0.5).slice(0, 4);
-    spellingShuffled.forEach((s) => usedSpellingWords.add(s.word));
+    const spellingShuffled = getUniqueSelection(
+      spellingPool,
+      4,
+      (s) => s.word,
+      usedSpellingWords
+    );
 
     // 3. FILTER VOCABULARY MATCHING
     let vocabWordsPool: WordItem[] = [];
@@ -191,13 +281,12 @@ export function generateSudanExams(
       });
     }
 
-    let availableVocab = vocabWordsPool.filter((v) => !usedVocabWords.has(v.word));
-    if (availableVocab.length < 5) {
-      availableVocab = vocabWordsPool;
-    }
-
-    const vocabSelection = availableVocab.sort(() => Math.random() - 0.5).slice(0, 5);
-    vocabSelection.forEach((v) => usedVocabWords.add(v.word));
+    const vocabSelection = getUniqueSelection(
+      vocabWordsPool,
+      5,
+      (v) => v.word.toLowerCase().trim(),
+      usedVocabWords
+    );
 
     const vocabMatching = vocabSelection.map((item) => {
       const regex = new RegExp(`\\b${item.word}\\b`, "gi");
@@ -219,24 +308,30 @@ export function generateSudanExams(
     if (scope === "unit" && targetUnitId !== undefined) {
       grammarPool = grammarPool.filter((g) => g.unitId === targetUnitId);
     }
-    let availableGrammar = grammarPool.filter((g) => !usedGrammarQuestions.has(g.question));
-    if (availableGrammar.length < 5) {
-      availableGrammar = grammarPool.length >= 5 ? grammarPool : [...GRAMMAR_POOL];
+    if (grammarPool.length === 0) {
+      grammarPool = [...GRAMMAR_POOL];
     }
-    const grammarShuffled = availableGrammar.sort(() => Math.random() - 0.5).slice(0, 5);
-    grammarShuffled.forEach((g) => usedGrammarQuestions.add(g.question));
+    const grammarShuffled = getUniqueSelection(
+      grammarPool,
+      5,
+      (g) => g.question.trim().toLowerCase(),
+      usedGrammarQuestions
+    );
 
     // 5. FILTER WRITING
     let writingPool = [...WRITING_POOL];
     if (scope === "unit" && targetUnitId !== undefined) {
       writingPool = writingPool.filter((w) => w.unitId === targetUnitId);
     }
-    let availableWriting = writingPool.filter((w) => !usedWritingJumbled.has(w.jumbled));
-    if (availableWriting.length < 2) {
-      availableWriting = writingPool.length >= 2 ? writingPool : [...WRITING_POOL];
+    if (writingPool.length === 0) {
+      writingPool = [...WRITING_POOL];
     }
-    const writingShuffled = availableWriting.sort(() => Math.random() - 0.5).slice(0, 2);
-    writingShuffled.forEach((w) => usedWritingJumbled.add(w.jumbled));
+    const writingShuffled = getUniqueSelection(
+      writingPool,
+      2,
+      (w) => w.jumbled.trim().toLowerCase(),
+      usedWritingJumbled
+    );
 
     papers.push({
       id: `paper-${i}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,

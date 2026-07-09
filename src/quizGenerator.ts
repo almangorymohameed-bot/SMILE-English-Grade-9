@@ -394,7 +394,16 @@ export function generateQuiz(
     }
   });
 
-  const randomizedSubset = finalQuestions
+  // De-duplicate final questions by question text to ensure no repetition
+  const uniqueQuestionsMap = new Map<string, typeof finalQuestions[0]>();
+  finalQuestions.forEach(q => {
+    const key = q.question.trim().toLowerCase();
+    if (!uniqueQuestionsMap.has(key)) {
+      uniqueQuestionsMap.set(key, q);
+    }
+  });
+
+  const randomizedSubset = Array.from(uniqueQuestionsMap.values())
     .sort(() => Math.random() - 0.5)
     .slice(0, Math.min(limit, 30));
 

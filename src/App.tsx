@@ -49,6 +49,7 @@ import InteractiveFlashcards from "./components/InteractiveFlashcards";
 import WordSearchGame from "./components/WordSearchGame";
 import DictationGame from "./components/DictationGame";
 import LessonGrammar from "./components/LessonGrammar";
+import InteractiveWord from "./components/InteractiveWord";
 import LessonIllustration from "./components/LessonIllustration";
 import { getLessonImageUrl, getLessonCartoonDesc } from "./utils/lessonImages";
 import APKInstallPrompt from "./components/APKInstallPrompt";
@@ -1035,27 +1036,20 @@ export default function App() {
       const currentWordGlobalIdx = startWordOffset + wordCounter;
       wordCounter++;
 
-      const isHighlighted = speakingText !== null && 
+            const isHighlighted = speakingText !== null && 
         audioPlaybackActive && 
         spokenWordIndex === currentWordGlobalIdx &&
         (speakingText.includes(cleanWord) || speakingText.includes(text));
       
       return (
-        <span
+        <InteractiveWord
           key={idx}
-          onClick={(e) => {
-            e.stopPropagation(); // Stop parent line speech from triggering
-            speakText(cleanWord, voiceName);
-          }}
-          className={`inline-block cursor-pointer px-1 rounded transition-all duration-150 transform select-all ${
-            isHighlighted 
-              ? "bg-amber-400 text-slate-900 font-extrabold scale-110 shadow-md ring-2 ring-amber-300" 
-              : "hover:bg-yellow-200 active:bg-yellow-300 text-indigo-950 border-b border-dashed border-indigo-300 hover:border-yellow-600 font-extrabold hover:scale-105"
-          }`}
-          title={`Click to read: ${cleanWord}`}
-        >
-          {word}
-        </span>
+          word={word}
+          cleanWord={cleanWord}
+          voiceName={voiceName}
+          isHighlighted={isHighlighted}
+          speakText={speakText}
+        />
       );
     });
   };

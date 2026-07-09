@@ -34,7 +34,8 @@ import {
   ChevronDown,
   ChevronUp,
   Settings,
-  Smartphone
+  Smartphone,
+  PenTool
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { SMILE_UNITS } from "./smileData";
@@ -46,6 +47,7 @@ import { getCachedAudioUrl, saveAudioToCache } from "./utils/audioCache";
 import OfflineManager from "./components/OfflineManager";
 import InteractiveFlashcards from "./components/InteractiveFlashcards";
 import WordSearchGame from "./components/WordSearchGame";
+import DictationGame from "./components/DictationGame";
 import LessonIllustration from "./components/LessonIllustration";
 import { getLessonImageUrl, getLessonCartoonDesc } from "./utils/lessonImages";
 import APKInstallPrompt from "./components/APKInstallPrompt";
@@ -203,7 +205,7 @@ function getSudaneseCharacter(speaker: string): SudaneseCharacter {
 export default function App() {
   const [selectedUnit, setSelectedUnit] = useState<UnitItem>(SMILE_UNITS[0]);
   const [selectedLesson, setSelectedLesson] = useState<Lesson>(SMILE_UNITS[0].lessons[0]);
-  const [activeTab, setActiveTab] = useState<"book" | "dictionary" | "quiz" | "adventure" | "syllabus" | "print" | "game">("book");
+  const [activeTab, setActiveTab] = useState<"book" | "dictionary" | "quiz" | "adventure" | "syllabus" | "print" | "game" | "dictation">("book");
   const [vocabMode, setVocabMode] = useState<"dictionary" | "flashcards">("dictionary");
   const [showUnitsList, setShowUnitsList] = useState(false);
   const [showSoundSettings, setShowSoundSettings] = useState(false);
@@ -373,7 +375,7 @@ export default function App() {
     };
   }, []);
 
-  const navigateToTab = (tab: "book" | "dictionary" | "quiz" | "adventure" | "syllabus" | "print" | "game") => {
+  const navigateToTab = (tab: "book" | "dictionary" | "quiz" | "adventure" | "syllabus" | "print" | "game" | "dictation") => {
     setActiveTab(tab);
     window.history.pushState({ tab, unitId: selectedUnit.id, lessonId: selectedLesson.id }, "");
   };
@@ -399,7 +401,7 @@ export default function App() {
   };
 
   const navigateFull = (
-    tab: "book" | "dictionary" | "quiz" | "adventure" | "syllabus" | "print" | "game",
+    tab: "book" | "dictionary" | "quiz" | "adventure" | "syllabus" | "print" | "game" | "dictation",
     unit: UnitItem,
     lesson: Lesson
   ) => {
@@ -1445,6 +1447,21 @@ export default function App() {
               <Sparkles className="w-5 h-5 mb-0.5" />
               <span>Word Search</span>
               <span className="text-[10px] opacity-80 font-bold">Vocab Game</span>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => navigateToTab("dictation")}
+              className={`flex-1 min-w-[110px] py-4 px-3 rounded-[24px] font-black text-xs uppercase tracking-wider transition-all flex flex-col items-center justify-center gap-1 cursor-pointer ${
+                activeTab === "dictation"
+                  ? "bg-indigo-600 text-white border-b-4 border-indigo-800 shadow-md"
+                  : "bg-transparent hover:bg-slate-100/85 text-indigo-950 font-bold"
+              }`}
+            >
+              <PenTool className="w-5 h-5 mb-0.5" />
+              <span>Spelling Dictation</span>
+              <span className="text-[10px] opacity-80 font-bold">الإملاء التفاعلي</span>
             </motion.button>
 
             <motion.button
@@ -2582,6 +2599,24 @@ export default function App() {
                   <WordSearchGame
                     currentUnit={selectedUnit}
                     speakText={speakText}
+                    addPoints={(amt) => setPoints(p => p + amt)}
+                    addBadge={(badge) => setBadges(b => b.includes(badge) ? b : [...b, badge])}
+                  />
+                </motion.div>
+              )}
+
+              {/* TAB: INTERACTIVE SPELLING DICTATION GAME (لعبة الإملاء التفاعلي) */}
+              {activeTab === "dictation" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="flex flex-col gap-6"
+                >
+                  <DictationGame
+                    units={SMILE_UNITS}
+                    speakText={speakText}
+                    readingSpeed={readingSpeed}
                     addPoints={(amt) => setPoints(p => p + amt)}
                     addBadge={(badge) => setBadges(b => b.includes(badge) ? b : [...b, badge])}
                   />

@@ -186,31 +186,12 @@ app.post("/api/translate", async (req, res) => {
   const cleanText = text.trim();
   const cacheKey = cleanText.toLowerCase();
 
+  // Return cached result if available
   if (translationCache[cacheKey]) {
     return res.json({ translation: translationCache[cacheKey] });
   }
 
-  // 1. Try server-side Gemini API if initialized
-  if (ai) {
-    try {
-      const prompt = `Translate the English word or short phrase "${cleanText}" into clear, simple Arabic suitable for a Grade 9 Sudanese student learning English. Return ONLY the Arabic translation itself, with absolutely no additional text, explanation, punctuation, or wrapper.`;
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: [{ parts: [{ text: prompt }] }],
-      });
-
-      const translated = response.text?.trim();
-      if (translated) {
-        // Simple sanity check to make sure it didn't return an empty string or the prompt
-        translationCache[cacheKey] = translated;
-        return res.json({ translation: translated });
-      }
-    } catch (e: any) {
-      console.warn("Gemini translation attempt failed, falling back to Google Translate API:", e.message || e);
-    }
-  }
-
-  // 2. Fallback to Google Translate Translation Engine (fast and robust)
+  // 1. Try Google Translate Translation Engine first (extremely fast, robust, and zero-quota limits)
   try {
     const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=ar&dt=t&q=${encodeURIComponent(cleanText)}`;
     const googleRes = await fetch(url, {
@@ -228,10 +209,29 @@ app.post("/api/translate", async (req, res) => {
       }
     }
   } catch (err: any) {
-    console.error("All translation engines failed:", err.message || err);
+    console.log("Google Translate API direct fetch failed, trying fallback model:", err.message || err);
   }
 
-  // Final static fallback dictionary if everything else fails (should be extremely rare or impossible with the robust API fallback)
+  // 2. Fallback to Gemini if Google Translate fails
+  if (ai) {
+    try {
+      const prompt = `Translate the English word or short phrase "${cleanText}" into clear, simple Arabic suitable for a Grade 9 Sudanese student learning English. Return ONLY the Arabic translation itself, with absolutely no additional text, explanation, punctuation, or wrapper.`;
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [{ parts: [{ text: prompt }] }],
+      });
+
+      const translated = response.text?.trim();
+      if (translated) {
+        translationCache[cacheKey] = translated;
+        return res.json({ translation: translated });
+      }
+    } catch (e: any) {
+      console.log("Gemini translation fallback model also failed:", e.message || e);
+    }
+  }
+
+  // Final fallback to returning the original text if both translation engines fail
   return res.json({ translation: cleanText });
 });
 

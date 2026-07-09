@@ -421,7 +421,8 @@ export default function App() {
   };
 
   const handleRemoveWatermark = () => {
-    if (watermarkPassword === "20302060") {
+    // Obfuscating '20302060' to hide it from plain source code
+    if (watermarkPassword === atob("MjAzMDIwNjA=")) {
       setWatermarkRemoved(true);
       setPasswordError("");
     } else {
@@ -2639,7 +2640,7 @@ export default function App() {
                     @media print {
                       @page {
                         size: A4 portrait;
-                        margin: 1.4cm 1.2cm !important;
+                        margin: 0 !important;
                       }
                       body, html, #root {
                         background: white !important;
@@ -2680,10 +2681,11 @@ export default function App() {
                         border: none !important;
                         box-shadow: none !important;
                         margin: 0 !important;
-                        padding: 0 !important; /* Handled by page margin */
-                        width: 100% !important;
-                        height: auto !important;
-                        min-height: 100% !important;
+                        padding: 1.4cm 1.2cm 1.8cm 1.2cm !important; /* Fixed print padding with bottom margin space */
+                        width: 21cm !important;
+                        height: 29.6cm !important;
+                        max-width: 21cm !important;
+                        max-height: 29.6cm !important;
                         box-sizing: border-box !important;
                         background: white !important;
                         page-break-after: always !important;
@@ -2691,17 +2693,21 @@ export default function App() {
                         page-break-inside: avoid !important;
                         break-inside: avoid !important;
                         position: relative !important;
-                        overflow: visible !important;
+                        overflow: hidden !important;
                         display: block !important;
                       }
                       .watermark {
-                        color: rgba(0, 0, 0, 0.04) !important;
+                        color: rgba(0, 0, 0, 0.07) !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        display: flex !important;
                       }
                     }
                     @media screen {
                       .print-container {
                         width: 21cm !important;
-                        height: 29.7cm !important;
+                        height: auto !important;
+                        min-height: 29.7cm !important;
                         max-width: 100% !important;
                         margin: 0 auto 2rem auto !important;
                         padding: 1.5cm 1.2cm !important;
@@ -2711,9 +2717,9 @@ export default function App() {
                         border: 1px solid #e2e8f0 !important;
                         border-radius: 24px !important;
                         position: relative !important;
-                        overflow: hidden !important;
+                        overflow: visible !important;
                       }
-                      @media (max-width: 22cm) {
+                      @media screen and (max-width: 22cm) {
                         .print-container {
                           height: auto !important;
                           padding: 1.2rem 1rem !important;
@@ -2761,7 +2767,7 @@ export default function App() {
                         <p className="text-xs font-bold text-slate-500">
                           {watermarkRemoved 
                             ? "تمت إزالة العلامة المائية بنجاح! يمكنك الآن طباعة ورقة العمل بشكل رسمي ونظيف." 
-                            : "الامتحان محمي بعلامة مائية. لإزالتها، يرجى إدخال رمز المرور الخاص بالمعلم (20302060)."}
+                            : "الامتحان محمي بعلامة مائية لتشجيع الاستخدام التفاعلي. المعلمون يمكنهم إزالتها بإدخال رمز مرور المعلم المخصص."}
                         </p>
                       </div>
                     </div>
@@ -2771,7 +2777,7 @@ export default function App() {
                         <div className="flex gap-2">
                           <input
                             type="password"
-                            placeholder="رمز مرور إزالة العلامة (20302060)"
+                            placeholder="رمز مرور إزالة العلامة المائية"
                             value={watermarkPassword}
                             onChange={(e) => setWatermarkPassword(e.target.value)}
                             onKeyDown={(e) => { if (e.key === "Enter") handleRemoveWatermark(); }}
@@ -2955,10 +2961,10 @@ export default function App() {
                             {/* WATERMARK LAYER (CONDITIONAL) */}
                             {!watermarkRemoved && (
                               <div 
-                                className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-100 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
-                                style={{ opacity: 0.1, zIndex: 0 }}
+                                className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-200/50 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
+                                style={{ opacity: 0.15, zIndex: 0, direction: "rtl" }}
                               >
-                                SMILE English Grade 9 Companion • Teacher Copy • Watermark Active • Password 20302060
+                                نقلة للمناهج الالكترونية
                               </div>
                             )}
 
@@ -3002,7 +3008,7 @@ export default function App() {
                           </div>
 
                           {/* EXAM QUESTIONS SPACE */}
-                          <div className="relative z-10 space-y-8" style={{ fontFamily: "Inter, sans-serif" }}>
+                          <div className="relative z-10 space-y-8 print:space-y-4" style={{ fontFamily: "Inter, sans-serif" }}>
                             
                             {/* QUESTION 1: COMPREHENSION PASSAGE */}
                             <div>
@@ -3014,12 +3020,12 @@ export default function App() {
                                 Read the following passage carefully, then answer the questions below:
                               </p>
                               
-                              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs sm:text-sm leading-relaxed font-medium text-slate-800 mb-4 text-justify">
+                              <div className="bg-slate-50 p-4 print:p-3 rounded-xl border border-slate-200 text-xs sm:text-sm print:text-xs leading-relaxed font-medium text-slate-800 mb-4 print:mb-2 text-justify">
                                 <strong className="block text-slate-900 text-sm mb-1.5 uppercase tracking-wide underline">{examPaper.passage.title}</strong>
                                 {examPaper.passage.text}
                               </div>
 
-                              <div className="space-y-4">
+                              <div className="space-y-4 print:space-y-2">
                                 {examPaper.passage.questions.map((q, idx) => {
                                   const currentVal = paperAns.q1[idx] || "";
                                   const isCorrectTF = q.isTrueFalse ? currentVal.trim().toLowerCase() === q.correctTF?.toLowerCase() : checkComprehensionAnswer(currentVal, q.answer);
@@ -3122,21 +3128,21 @@ export default function App() {
                               </h3>
                               
                               {/* Subpart A: Missing Letters */}
-                              <div className="mb-6">
-                                <p className="text-xs text-slate-500 font-bold mb-3 italic text-left">
+                              <div className="mb-6 print:mb-3">
+                                <p className="text-xs text-slate-500 font-bold mb-3 print:mb-1.5 italic text-left">
                                   A) Complete the missing letters of the following words according to the given clues: (4 Marks)
                                 </p>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-2">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2 gap-4 print:gap-2 ml-2">
                                   {examPaper.spelling.map((s, idx) => {
                                     const currentVal = paperAns.q2a[idx] || "";
                                     const isCorrect = currentVal.trim().toUpperCase() === s.word.toUpperCase();
 
                                     return (
-                                      <div key={`sp-${idx}`} className="text-xs flex flex-col gap-1 bg-slate-50/40 p-2.5 rounded-lg border border-slate-100">
+                                      <div key={`sp-${idx}`} className="text-xs flex flex-col gap-1 bg-slate-50/40 p-2.5 print:p-1.5 rounded-lg border border-slate-100">
                                         <span className="font-extrabold text-slate-800 text-left">
                                           {idx + 1}. Clue: <span className="font-medium text-slate-600">{s.clue}</span>
                                         </span>
-                                        <div className="flex items-center gap-3 mt-1.5 font-mono text-sm tracking-widest font-black text-left">
+                                        <div className="flex items-center gap-3 mt-1.5 print:mt-0.5 font-mono text-sm tracking-widest font-black text-left">
                                           <span className="text-slate-400 bg-white border border-slate-200 px-3 py-1 rounded select-all uppercase shrink-0">
                                             {s.gapped}
                                           </span>
@@ -3177,14 +3183,14 @@ export default function App() {
 
                               {/* Subpart B: Vocabulary Matching */}
                               <div>
-                                <p className="text-xs text-slate-500 font-bold mb-3 italic text-left">
+                                <p className="text-xs text-slate-500 font-bold mb-3 print:mb-1.5 italic text-left">
                                   B) Match the English words in Column A with their correct example sentence context in Column B: (4 Marks)
                                 </p>
                                 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 ml-4 text-xs font-extrabold">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2 gap-6 print:gap-4 ml-4 text-xs font-extrabold">
                                   <div>
                                     <span className="block border-b border-slate-200 pb-1 mb-2 text-slate-400 uppercase text-[10px] text-left">Column A (Word)</span>
-                                    <div className="space-y-3">
+                                    <div className="space-y-3 print:space-y-1.5">
                                       {examPaper.vocabMatching.map((vm, idx) => {
                                         const currentVal = paperAns.q2b[idx] || "";
                                         
@@ -3193,7 +3199,7 @@ export default function App() {
                                         const isCorrect = currentVal.trim().toUpperCase() === correctLetter;
 
                                         return (
-                                          <div key={`va-${idx}`} className="flex justify-between items-center min-h-[40px] border border-slate-200/50 bg-slate-50/50 px-3 rounded-lg text-left">
+                                          <div key={`va-${idx}`} className="flex justify-between items-center min-h-[40px] print:min-h-[30px] border border-slate-200/50 bg-slate-50/50 px-3 print:px-2 rounded-lg text-left">
                                             <span>{idx + 1}. <strong className="text-indigo-900 uppercase">{vm.word}</strong></span>
                                             
                                             <div className="flex items-center gap-2">
@@ -3236,11 +3242,11 @@ export default function App() {
                                   
                                   <div>
                                     <span className="block border-b border-slate-200 pb-1 mb-2 text-slate-400 text-left uppercase text-[10px]">Column B (Sentence Context)</span>
-                                    <div className="space-y-3">
+                                    <div className="space-y-3 print:space-y-1.5">
                                       {sortedSentences.map((vm, idx) => {
                                         const letter = String.fromCharCode(65 + idx); // A, B, C, D, E
                                         return (
-                                          <div key={`vb-${idx}`} className="flex justify-between items-center min-h-[40px] border border-slate-200/50 bg-slate-50/50 px-3 py-1 rounded-lg text-left">
+                                          <div key={`vb-${idx}`} className="flex justify-between items-center min-h-[40px] print:min-h-[30px] border border-slate-200/50 bg-slate-50/50 px-3 print:px-2 py-1 print:py-0.5 rounded-lg text-left">
                                             <span className="font-bold text-slate-700">
                                               <span className="text-indigo-600 mr-2">[{letter}]</span>
                                               {vm.definitionOrSentence}
@@ -3270,10 +3276,10 @@ export default function App() {
                               {/* WATERMARK LAYER (CONDITIONAL) */}
                               {!watermarkRemoved && (
                                 <div 
-                                  className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-100 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
-                                  style={{ opacity: 0.1, zIndex: 0 }}
+                                  className="watermark absolute inset-0 pointer-events-none select-none flex items-center justify-center rotate-[-30deg] text-slate-200/50 font-black text-3xl sm:text-5xl uppercase tracking-widest text-center"
+                                  style={{ opacity: 0.15, zIndex: 0, direction: "rtl" }}
                                 >
-                                  SMILE English Grade 9 Companion • Teacher Copy • Watermark Active • Password 20302060
+                                  نقلة للمناهج الالكترونية
                                 </div>
                               )}
 
@@ -3298,7 +3304,7 @@ export default function App() {
                               </div>
 
                               {/* EXAM QUESTIONS SPACE - PART 2 */}
-                              <div className="relative z-10 space-y-6" style={{ fontFamily: "Inter, sans-serif" }}>
+                              <div className="relative z-10 space-y-6 print:space-y-4" style={{ fontFamily: "Inter, sans-serif" }}>
 
                               {/* QUESTION 3: GRAMMAR & LANGUAGE STRUCTURES */}
                               <div>
@@ -3310,7 +3316,7 @@ export default function App() {
                                 Choose the correct option from the brackets to complete each sentence: (8 Marks)
                               </p>
 
-                              <div className="space-y-4 ml-2">
+                              <div className="space-y-4 print:space-y-2.5 ml-2">
                                 {examPaper.grammar.map((g, idx) => {
                                   const currentVal = paperAns.q3[idx] || "";
                                   const isCorrect = currentVal === g.correct;
@@ -3395,14 +3401,14 @@ export default function App() {
                                 Reorder the following jumbled words to construct a chronologically correct, meaningful sentence: (6 Marks)
                               </p>
 
-                              <div className="space-y-6 ml-2">
+                              <div className="space-y-6 print:space-y-3 ml-2">
                                 {examPaper.writing.map((w, idx) => {
                                   const currentVal = paperAns.q4[idx] || "";
                                   const isCorrect = checkWritingAnswer(currentVal, w.ordered);
 
                                   return (
-                                    <div key={`wt-${idx}`} className="text-xs flex flex-col gap-2">
-                                      <div className="flex items-start gap-1 font-extrabold text-slate-800 text-left">
+                                    <div key={`wt-${idx}`} className="text-xs flex flex-col gap-2 print:gap-1">
+                                      <div className="flex items-start gap-1 font-extrabold text-slate-800 text-left print:gap-0.5">
                                         <span className="text-slate-500">{idx + 1}. Words:</span>
                                         <span className="flex-1 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-lg font-mono text-slate-700 font-bold text-left">
                                           {w.jumbled}

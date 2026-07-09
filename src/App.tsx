@@ -2638,43 +2638,61 @@ export default function App() {
                   <style dangerouslySetInnerHTML={{ __html: `
                     @media print {
                       @page {
-                        size: A4;
-                        margin: 0 !important;
+                        size: A4 portrait;
+                        margin: 1.4cm 1.2cm !important;
                       }
-                      body, html {
+                      body, html, #root {
                         background: white !important;
                         color: black !important;
                         padding: 0 !important;
                         margin: 0 !important;
-                        width: 21cm !important;
-                        height: 29.7cm !important;
+                        width: 100% !important;
+                        height: auto !important;
                         -webkit-print-color-adjust: exact !important;
                         print-color-adjust: exact !important;
                       }
-                      header, footer, aside, .no-print, button, input, select {
+                      header, footer, aside, .no-print, button, input, select, nav, [role="tablist"], iframe {
                         display: none !important;
                       }
-                      main {
-                        width: 100% !important;
-                        max-width: 100% !important;
+                      /* Reset outer website container paddings/backgrounds/shadows under print */
+                      div.min-h-screen, main, div.grid, .printable-exams-wrapper {
+                        display: block !important;
                         padding: 0 !important;
                         margin: 0 !important;
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        box-shadow: none !important;
+                        border: none !important;
+                        background: transparent !important;
+                      }
+                      .no-page-break-container {
+                        padding: 0 !important;
+                        margin: 0 !important;
+                        border: none !important;
+                        box-shadow: none !important;
+                        display: block !important;
+                      }
+                      .no-page-break-container > * {
+                        margin-top: 0 !important;
+                        margin-bottom: 0 !important;
                       }
                       .print-container {
                         border: none !important;
                         box-shadow: none !important;
                         margin: 0 !important;
-                        padding: 1.5cm 1.2cm !important;
-                        width: 21cm !important;
-                        height: 29.7cm !important;
-                        max-width: 21cm !important;
-                        max-height: 29.7cm !important;
+                        padding: 0 !important; /* Handled by page margin */
+                        width: 100% !important;
+                        height: auto !important;
+                        min-height: 100% !important;
                         box-sizing: border-box !important;
                         background: white !important;
-                        page-break-after: always;
-                        break-after: page;
+                        page-break-after: always !important;
+                        break-after: page !important;
+                        page-break-inside: avoid !important;
+                        break-inside: avoid !important;
                         position: relative !important;
-                        overflow: hidden !important;
+                        overflow: visible !important;
+                        display: block !important;
                       }
                       .watermark {
                         color: rgba(0, 0, 0, 0.04) !important;
@@ -2911,7 +2929,7 @@ export default function App() {
                   </div>
 
                   {/* RENDER PAGES LIST (A4 PRINT CONTAINERS) */}
-                  <div className="flex flex-col gap-8">
+                  <div className="flex flex-col gap-8 printable-exams-wrapper">
                     {examPapers.map((examPaper, paperIdx) => {
                       const paperAns = userAnswers[examPaper.id] || { q1: {}, q2a: {}, q2b: {}, q3: {}, q4: {} };
                       const isGraded = gradedPapers[examPaper.id];
@@ -2923,56 +2941,6 @@ export default function App() {
 
                       return (
                         <div key={examPaper.id} className="space-y-6 pb-12 border-b-2 border-slate-200 last:border-0 no-page-break-container">
-                          
-                          {/* Interactive Grading Panel */}
-                          <div className="bg-slate-50 border border-slate-200 p-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4 no-print text-right" style={{ direction: "rtl" }}>
-                            <div className="w-full sm:w-auto">
-                              <h4 className="text-sm font-black text-slate-800 flex items-center gap-2 justify-end">
-                                <span className="text-indigo-600 font-bold">تفاعلية حل وتصحيح ورقة العمل</span>
-                                <span>📝</span>
-                              </h4>
-                              <p className="text-[11px] text-slate-500 font-bold mt-1">
-                                قم بحل الأسئلة على الشاشة ثم اضغط تصحيح، وإذا قمت بطباعة الصفحة ستظهر إجاباتك مكتوبة بشكل رسمي!
-                              </p>
-                            </div>
-                            
-                            <div className="flex gap-2 shrink-0 w-full sm:w-auto justify-end">
-                              {!isGraded ? (
-                                <button
-                                  onClick={() => {
-                                    setGradedPapers(prev => ({ ...prev, [examPaper.id]: true }));
-                                  }}
-                                  className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black px-4 py-2.5 rounded-xl border-b-4 border-emerald-800 active:scale-95 transition-all cursor-pointer"
-                                >
-                                  تصحيح وإعطاء الدرجة 🏁
-                                </button>
-                              ) : (
-                                <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
-                                  <div className="bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1.5 rounded-xl font-extrabold text-xs flex items-center gap-1.5">
-                                    <span>النتيجة:</span>
-                                    <span className="text-sm font-black text-emerald-700 bg-emerald-100/60 px-2 py-0.5 rounded-lg">
-                                      {score} / 30
-                                    </span>
-                                    <span>{score >= 25 ? "ممتاز جداً! 🌟" : score >= 15 ? "عمل جيد! 👍" : "تحتاج لمراجعة 📚"}</span>
-                                  </div>
-                                  
-                                  <button
-                                    onClick={() => {
-                                      setGradedPapers(prev => ({ ...prev, [examPaper.id]: false }));
-                                      setUserAnswers(prev => {
-                                        const copy = { ...prev };
-                                        delete copy[examPaper.id];
-                                        return copy;
-                                      });
-                                    }}
-                                    className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-xs font-black px-3.5 py-2.5 rounded-xl border border-indigo-200 active:scale-95 transition-all cursor-pointer"
-                                  >
-                                    إعادة المحاولة 🔄
-                                  </button>
-                                </div>
-                              )}
-                            </div>
-                          </div>
 
                           {/* ================= PAGE 1 ================= */}
                           <div 
@@ -3492,6 +3460,127 @@ export default function App() {
                       );
                     })}
                   </div>
+
+                  {/* UNIFIED GRADING PANEL AT THE END OF ALL SHEETS (no-print) */}
+                  {examPapers.length > 0 && (
+                    <div className="bg-slate-50 border-2 border-indigo-100 rounded-[32px] p-6 mt-6 no-print text-right relative z-10" style={{ direction: "rtl" }}>
+                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 pb-4 mb-6">
+                        <div>
+                          <h4 className="text-lg font-black text-slate-800 flex items-center gap-2 justify-end">
+                            <span className="text-indigo-600 font-extrabold">لوحة التصحيح الشاملة لكافة الأوراق</span>
+                            <span>📊</span>
+                          </h4>
+                          <p className="text-xs text-slate-500 font-bold mt-1">
+                            قم بحل الأسئلة في جميع الصفحات وأوراق العمل أعلاه، ثم اضغط على زر التصحيح الموحد لعرض النتيجة النهائية الشاملة.
+                          </p>
+                        </div>
+                        
+                        <div className="bg-indigo-100 text-indigo-700 px-3.5 py-1.5 rounded-full text-xs font-black">
+                          عدد الأوراق النشطة: {examPapers.length} {examPapers.length === 1 ? "ورقة" : "أوراق"} (30 درجة لكل ورقة)
+                        </div>
+                      </div>
+
+                      {/* Score calculation logic */}
+                      {(() => {
+                        const allGraded = examPapers.every(p => gradedPapers[p.id]);
+                        const totalScore = examPapers.reduce((sum, p) => sum + (gradedPapers[p.id] ? calculatePaperScore(p) : 0), 0);
+                        const maxPossibleScore = examPapers.length * 30;
+                        const percentage = maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0;
+
+                        return (
+                          <div>
+                            {!allGraded ? (
+                              <div className="flex flex-col items-center justify-center py-6 text-center">
+                                <span className="text-5xl mb-3 animate-bounce">📝</span>
+                                <h5 className="font-black text-slate-700 text-sm mb-4">هل انتهيت من الإجابة على جميع أوراق العمل المفتوحة؟</h5>
+                                <button
+                                  onClick={() => {
+                                    const nextGraded: Record<string, boolean> = {};
+                                    examPapers.forEach(p => {
+                                      nextGraded[p.id] = true;
+                                    });
+                                    setGradedPapers(nextGraded);
+                                  }}
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-8 py-4 rounded-2xl border-b-4 border-emerald-800 shadow-md hover:shadow-lg transition-all active:scale-95 text-sm flex items-center gap-2 cursor-pointer"
+                                >
+                                  <span>إنهاء وتصحيح كافة الأوراق معاً 🏁</span>
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="space-y-6">
+                                {/* Score Dashboard Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                  {/* Big Score Card */}
+                                  <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 text-white p-5 rounded-2xl shadow-sm flex flex-col items-center justify-center text-center">
+                                    <span className="text-xs font-black uppercase tracking-wider opacity-90">الدرجة النهائية الكلية</span>
+                                    <span className="text-4xl font-black mt-2">{totalScore} <span className="text-lg opacity-80">/ {maxPossibleScore}</span></span>
+                                    <span className="text-xs font-bold mt-1.5 bg-indigo-700/50 px-2.5 py-1 rounded-full">نسبة الإنجاز: {percentage}%</span>
+                                  </div>
+
+                                  {/* Result / Appraisal Card */}
+                                  <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex flex-col justify-center items-center text-center">
+                                    <span className="text-2xl mb-1">
+                                      {percentage >= 85 ? "👑" : percentage >= 65 ? "🌟" : percentage >= 50 ? "👍" : "📚"}
+                                    </span>
+                                    <h6 className="font-black text-slate-800 text-sm">مستوى الطالب الشامل</h6>
+                                    <p className="text-xs text-indigo-600 font-extrabold mt-1.5">
+                                      {percentage >= 85 ? "ممتاز جداً ونموذجي! دكتور المستقبل" : 
+                                       percentage >= 65 ? "رائع جداً! عمل متميز ومستمر" : 
+                                       percentage >= 50 ? "جيد ومقبول، استمر في المذاكرة والتحسن" : 
+                                       "تحتاج لمزيد من المراجعة والتركيز"}
+                                    </p>
+                                  </div>
+
+                                  {/* Quick Actions Card */}
+                                  <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex flex-col justify-center gap-2">
+                                    <button
+                                      onClick={() => {
+                                        setGradedPapers({});
+                                        setUserAnswers({});
+                                      }}
+                                      className="bg-rose-50 hover:bg-rose-100 text-rose-700 font-black py-2.5 px-4 rounded-xl text-xs border border-rose-200 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
+                                    >
+                                      <span>مسح الإجابات والبدء من جديد 🔄</span>
+                                    </button>
+                                    <button
+                                      onClick={() => window.print()}
+                                      className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-black py-2.5 px-4 rounded-xl text-xs border border-emerald-200 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-1.5"
+                                    >
+                                      <span>طباعة التقرير المصحح 🖨️</span>
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Papers Breakdown List */}
+                                <div className="bg-white border border-slate-200 rounded-2xl p-4">
+                                  <h6 className="text-xs font-black text-slate-700 mb-3 border-b border-slate-100 pb-2">تفصيل الدرجات لكل ورقة عمل على حدة:</h6>
+                                  <div className="space-y-2">
+                                    {examPapers.map((p, idx) => {
+                                      const pScore = calculatePaperScore(p);
+                                      return (
+                                        <div key={p.id} className="flex justify-between items-center text-xs font-bold text-slate-600 bg-slate-50/50 hover:bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                                          <div className="flex items-center gap-2">
+                                            <span className="w-5 h-5 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-black text-[10px]">{idx + 1}</span>
+                                            <span>الورقة رقم {idx + 1}</span>
+                                          </div>
+                                          <div className="flex items-center gap-2">
+                                            <span className={`px-2 py-0.5 rounded-full text-[10px] ${pScore >= 25 ? "bg-emerald-100 text-emerald-700" : pScore >= 15 ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"}`}>
+                                              {pScore >= 25 ? "ممتاز ✨" : pScore >= 15 ? "جيد جداً 👍" : "بحاجة لدعم 📖"}
+                                            </span>
+                                            <span className="font-extrabold text-slate-800">{pScore} / 30 درجة</span>
+                                          </div>
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
